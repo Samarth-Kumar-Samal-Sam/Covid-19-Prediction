@@ -23,7 +23,7 @@ st.title('Covid-19 Prediction Web Application 📊')
 # Safe Image Loading
 image_path = r'./Assets/covid-19-image.jpg'
 if os.path.exists(image_path):
-    st.image(image_path, caption='Covid-19', use_column_width=True)
+    st.image(image_path, caption='Covid-19', use_container_width=True)
 else:
     st.warning(f"Image '{image_path}' not found. Please add it in the same folder as app.py.")
 
