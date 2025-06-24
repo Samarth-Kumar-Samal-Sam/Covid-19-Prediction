@@ -7,6 +7,7 @@ from prophet import Prophet
 import streamlit as st
 import warnings
 import os
+from PIL import Image
 
 warnings.filterwarnings('ignore')
 
@@ -23,12 +24,11 @@ st.title('Covid-19 Prediction Web Application 📊')
 # Safe Image Loading
 image_path = r'./Assets/covid-19-image.jpg'
 if os.path.exists(image_path):
-    st.image(image_path, caption='Covid-19', use_container_width=True)
+    img = Image.open(image_path)
+    img = img.resize((600, 500))  # width x height in pixels
+    st.image(img, caption='Covid-19')
 else:
     st.warning(f"Image '{image_path}' not found. Please add it in the same folder as app.py.")
-
-st.write('Developing a COVID-19 prediction web app with Prophet for forecasting, Plotly for interactive visualizations, and Streamlit for a user-friendly interface.')
-st.markdown("<br>", unsafe_allow_html=True)
 
 # Load Dataset
 df = pd.read_csv('./Dataset/covid-19.csv')
