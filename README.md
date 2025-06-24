@@ -1,90 +1,161 @@
+---
 
-# Project Title :
-## Covid-19 Prediction using Time Series, Prophet and Streamlit  
-  
-## Description :
-Experience real-time COVID-19 predictions with our intuitive web app powered by Facebook Prophet and Streamlit. Stay informed with accurate forecasts and make data-driven decisions for a safer future.
+# 🦠 Covid-19 Prediction Web Application
 
-Application Link : [App Link](https://sam-covid-19-prediction-app.streamlit.app/)
+![COVID-19](./Assets/covid-19-image.jpg)
 
-## Software and Tools Requirements
-1. [Github Account](https://github.com/)
-2. [Visual Studio Code IDE](https://code.visualstudio.com/)
-3. [Docker Hub Account](https://hub.docker.com/)
-4. [Docker Hub Desktop](https://docs.docker.com/desktop/install/windows-install/)
-5. [Python Interpreter](https://www.python.org/downloads/)
-6. [Git CLI](https://git-scm.com/downloads)
-7. [Streamlit Cloud](https://streamlit.io/cloud)
+## 🚀 Live Application
 
-## Installation of dependencies and execution of Text-Emotion-Classification Web Application
+🔗 [Access the Application Here](https://sam-covid-19-prediction-app.streamlit.app/)
 
-1. Go to my Github Repository location using this link : [Github Repository by Samarth-Kumar-Samal](https://github.com/Samarth-Kumar-Samal/Text-Emotion-Classification-using-NLP) (**Windows**) or https://github.com/Samarth-Kumar-Samal/Text-Emotion-Classification-using-NLP (**Linux**)
-2. Git clone or download as zip folder the entire repository into your computer using command :
+---
+
+## 📌 Project Overview
+
+Stay ahead with real-time COVID-19 predictions using this interactive web application powered by **Facebook Prophet** for forecasting and **Streamlit** for a sleek, user-friendly interface. This project helps visualize the spread of COVID-19 across countries and provides time series forecasts for **Confirmed**, **Recovered**, and **Death** cases.
+
+---
+
+## 🛠️ Tech Stack & Tools Used
+
+* **Python 3.8+**
+* **Streamlit**
+* **Facebook Prophet**
+* **Plotly**
+* **Seaborn & Matplotlib**
+* **Pandas & NumPy**
+
+---
+
+## 📦 Features
+
+✅ Interactive choropleth maps for Confirmed, Recovered, and Death cases
+✅ Date range filtering for customized analysis
+✅ Top 5 country comparison charts
+✅ Time-series visualizations
+✅ Forecasting using Prophet (for up to 10 years)
+✅ Responsive and intuitive UI with Streamlit
+
+---
+
+## ⚙️ Setup Instructions (Local Development)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/Samarth-Kumar-Samal/Covid-19-Prediction-Streamlit.git
+cd Covid-19-Prediction-Streamlit
 ```
-git clone https://github.com/Samarth-Kumar-Samal/Emotion-Text-Classification-using-NLP.git
-```
-3. It you have cloned the repository then its ready. If you have downloaded the repository as zip then unzip the repository.
-4. With the help of ***linux terminal*** in Linux or ***Command Prompt*** in Windows, open the folder location.
-5. Create a ***Python Environment*** inside the folder using the following command :
-```
+
+### 2. Create a Virtual Environment
+
+```bash
 python -m venv venv
-``` 
-6. After creation, activate the environment created using the command :
-***Windows :***
 ```
+
+### 3. Activate the Environment
+
+**On Windows:**
+
+```bash
 venv\Scripts\activate
 ```
-***Linux :***
+
+**On Linux/Mac:**
+
+```bash
+source venv/bin/activate
 ```
-venv/Scripts/activate
-```
-7. After step 6, an environment will be created and we have to install all the dependencies of Python using ***requirements.txt*** file using the following command :
-```
+
+### 4. Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
-8. After successful installation of all the dependencies, to run the web application, execute the following command :
-```
+
+### 5. Run the Streamlit Application
+
+```bash
 streamlit run app.py
 ```
-9. After execution, you will be able to access the web application where you predict the emotions by analyzing the text statements.
 
+---
 
-**You can directly click on the above Web Application link to access my application or follow the aobe instruction to run the files on your local system**
+## 📁 Repository Structure
 
+```
+.
+├── app.py                      # Main Streamlit app
+├── Assets/
+│   └── covid-19-image.jpg      # Image used in the web app
+├── Dataset/
+│   └── covid-19.csv            # COVID-19 dataset
+├── requirements.txt            # Python dependencies
+└── README.md                   # Project documentation
+```
 
-## Contributing
+---
 
-Contributions are always welcome!
+## 🧪 Software & Tools You’ll Need
 
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`
-3. Make your changes and commit them: `git commit -m 'Description of changes'`
-4. Push to the branch: `git push origin feature-name`
-5. Open a pull request.  
-  
+| Tool               | Link                                                          |
+| ------------------ | ------------------------------------------------------------- |
+| GitHub             | [github.com](https://github.com/)                             |
+| Python Interpreter | [python.org](https://www.python.org/downloads/)               |
+| Visual Studio Code | [code.visualstudio.com](https://code.visualstudio.com/)       |
+| Docker (optional)  | [docker.com](https://www.docker.com/products/docker-desktop/) |
+| Streamlit Cloud    | [streamlit.io/cloud](https://streamlit.io/cloud)              |
+| Git CLI            | [git-scm.com](https://git-scm.com/downloads)                  |
 
+---
 
+## 👨‍💻 Contributing
 
-## License
+Contributions are welcome! Here’s how to get started:
 
-This project is licensed under the [MIT License](LICENSE).  
-  
+1. Fork the repository
+2. Create a new branch:
 
+   ```bash
+   git checkout -b feature-name
+   ```
+3. Make your changes and commit:
 
+   ```bash
+   git commit -m "Add new feature"
+   ```
+4. Push your changes:
 
-## Authors
+   ```bash
+   git push origin feature-name
+   ```
+5. Open a Pull Request 🚀
 
-- [Samarth Kumar Samal Github](https://github.com/Samarth-Kumar-Samal)  
-  
+---
 
+## 📜 License
 
+This project is licensed under the [MIT License](./LICENSE).
 
-## Acknowledgements
+---
 
- - [Numpy](https://numpy.org/doc/stable/)
- - [Pandas](https://pandas.pydata.org/docs/)
- - [Matplotlib](https://matplotlib.org/stable/index.html)
- - [Seaborn](https://seaborn.pydata.org/) 
- - [Scikit-Learn](https://scikit-learn.org/stable/modules/classes.html)
- - [Streamlit](https://docs.streamlit.io/)
+## 👤 Author
 
+**Samarth Kumar Samal**
+🔗 [GitHub Profile](https://github.com/Samarth-Kumar-Samal-Sam)
+
+---
+
+## 🙏 Acknowledgements
+
+Special thanks to the libraries and frameworks that made this project possible:
+
+* [NumPy](https://numpy.org/)
+* [Pandas](https://pandas.pydata.org/)
+* [Matplotlib](https://matplotlib.org/)
+* [Seaborn](https://seaborn.pydata.org/)
+* [Scikit-learn](https://scikit-learn.org/)
+* [Streamlit](https://streamlit.io/)
+* [Facebook Prophet](https://facebook.github.io/prophet/)
+
+---
