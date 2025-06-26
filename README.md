@@ -2,78 +2,80 @@
 
 # 🦠 Covid-19 Prediction Web Application
 
-![COVID-19](./Assets/covid-19-image.jpg)
+### 🚀 **Live Demo**
 
-## 🚀 Live Application
-
-🔗 [Access the Application Here](https://sam-covid-19-prediction-app.streamlit.app/)
+🔗 [Try the Application Here](https://sam-covid-19-prediction-app.streamlit.app/) — **Experience real-time COVID-19 forecasting with an intuitive UI!**
 
 ---
 
 ## 📌 Project Overview
 
-Stay ahead with real-time COVID-19 predictions using this interactive web application powered by **Facebook Prophet** for forecasting and **Streamlit** for a sleek, user-friendly interface. This project helps visualize the spread of COVID-19 across countries and provides time series forecasts for **Confirmed**, **Recovered**, and **Death** cases.
+Stay ahead of the pandemic curve with this **interactive web app** that delivers real-time COVID-19 case predictions. Harnessing the power of **Facebook Prophet** for time series forecasting and the simplicity of **Streamlit** for rapid deployment, this tool enables users to visualize, analyze, and forecast COVID-19 trends worldwide.
+
+Whether you want to monitor confirmed cases, recoveries, or fatalities, this app brings the data to life through dynamic charts, maps, and predictive models.
 
 ---
 
-## 🛠️ Tech Stack & Tools Used
+## 🛠️ Tech Stack & Tools
 
-* **Python 3.8+**
-* **Streamlit**
-* **Facebook Prophet**
-* **Plotly**
-* **Seaborn & Matplotlib**
-* **Pandas & NumPy**
-
----
-
-## 📦 Features
-
-✅ Interactive choropleth maps for Confirmed, Recovered, and Death cases
-✅ Date range filtering for customized analysis
-✅ Top 5 country comparison charts
-✅ Time-series visualizations
-✅ Forecasting using Prophet (for up to 10 years)
-✅ Responsive and intuitive UI with Streamlit
+| Technology              | Purpose                                    |
+| ----------------------- | ------------------------------------------ |
+| 🐍 Python 3.8+          | Core programming language                  |
+| 🚀 Streamlit            | Fast, interactive web UI                   |
+| 📈 Facebook Prophet     | Advanced time-series forecasting           |
+| 📊 Plotly               | Interactive and rich visualizations        |
+| 🎨 Seaborn & Matplotlib | Statistical plotting & data visualization  |
+| 🐼 Pandas & NumPy       | Data manipulation and numerical operations |
 
 ---
 
-## ⚙️ Setup Instructions (Local Development)
+## ✨ Key Features
+
+* 🌍 **Global Choropleth Maps:** Visualize Confirmed, Recovered, and Death cases on an interactive world map
+* 📅 **Date Range Filtering:** Customize the analysis timeframe
+* 📊 **Top 5 Country Comparisons:** Compare trends side-by-side
+* 📉 **Time-Series Visualization:** Explore historical data and detect patterns
+* 🔮 **Long-Term Forecasting:** Predict up to 10 years ahead using Prophet
+* 📱 **Responsive UI:** Seamless experience across devices with Streamlit
+
+---
+
+## ⚙️ Setup & Run Locally
+
+Get started in minutes by following these steps:
 
 ### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Samarth-Kumar-Samal/Covid-19-Prediction-Streamlit.git
+
 cd Covid-19-Prediction-Streamlit
 ```
 
-### 2. Create a Virtual Environment
+### 2. Create & Activate Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-### 3. Activate the Environment
+* **Windows:**
 
-**On Windows:**
+  ```bash
+  venv\Scripts\activate
+  ```
+* **Linux/macOS:**
 
-```bash
-venv\Scripts\activate
-```
+  ```bash
+  source venv/bin/activate
+  ```
 
-**On Linux/Mac:**
-
-```bash
-source venv/bin/activate
-```
-
-### 4. Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Run the Streamlit Application
+### 4. Launch the Application
 
 ```bash
 streamlit run app.py
@@ -81,61 +83,61 @@ streamlit run app.py
 
 ---
 
-## 📁 Repository Structure
+## 📂 Project Structure
 
-```
+```plaintext
 .
-├── app.py                      # Main Streamlit app
+├── app.py                      # Main Streamlit application
 ├── Assets/
-│   └── covid-19-image.jpg      # Image used in the web app
+│   └── covid-19-image.jpg      # Web app imagery
 ├── Dataset/
-│   └── covid-19.csv            # COVID-19 dataset
-├── requirements.txt            # Python dependencies
-└── README.md                   # Project documentation
+│   └── covid-19.csv            # COVID-19 dataset (historical data)
+├── requirements.txt            # Python packages & dependencies
+└── README.md                   # This documentation
 ```
 
 ---
 
-## 🧪 Software & Tools You’ll Need
+## 🧰 Tools & Software Needed
 
-| Tool               | Link                                                          |
-| ------------------ | ------------------------------------------------------------- |
-| GitHub             | [github.com](https://github.com/)                             |
-| Python Interpreter | [python.org](https://www.python.org/downloads/)               |
-| Visual Studio Code | [code.visualstudio.com](https://code.visualstudio.com/)       |
-| Docker (optional)  | [docker.com](https://www.docker.com/products/docker-desktop/) |
-| Streamlit Cloud    | [streamlit.io/cloud](https://streamlit.io/cloud)              |
-| Git CLI            | [git-scm.com](https://git-scm.com/downloads)                  |
+| Tool                 | Link                                                          |
+| -------------------- | ------------------------------------------------------------- |
+| 🐙 GitHub            | [github.com](https://github.com/)                             |
+| 🐍 Python            | [python.org](https://www.python.org/downloads/)               |
+| 📝 VS Code           | [code.visualstudio.com](https://code.visualstudio.com/)       |
+| 🐳 Docker (optional) | [docker.com](https://www.docker.com/products/docker-desktop/) |
+| 🌐 Streamlit Cloud   | [streamlit.io/cloud](https://streamlit.io/cloud)              |
+| 🖥️ Git CLI          | [git-scm.com](https://git-scm.com/downloads)                  |
 
 ---
 
-## 👨‍💻 Contributing
+## 👩‍💻 Contribution Guidelines
 
-Contributions are welcome! Here’s how to get started:
+Contributions are **highly welcome!** Feel free to make this project better by following these steps:
 
 1. Fork the repository
-2. Create a new branch:
+2. Create your feature branch:
 
    ```bash
    git checkout -b feature-name
    ```
-3. Make your changes and commit:
+3. Commit your changes:
 
    ```bash
-   git commit -m "Add new feature"
+   git commit -m "Add feature or fix description"
    ```
-4. Push your changes:
+4. Push your branch:
 
    ```bash
    git push origin feature-name
    ```
-5. Open a Pull Request 🚀
+5. Open a pull request and let’s discuss! 🚀
 
 ---
 
 ## 📜 License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the **[MIT License](./LICENSE)** — feel free to use, modify, and distribute!
 
 ---
 
@@ -147,15 +149,14 @@ This project is licensed under the [MIT License](./LICENSE).
 ---
 
 ## 🙏 Acknowledgements
-
-Special thanks to the libraries and frameworks that made this project possible:
+Huge thanks to the incredible libraries and frameworks that made this project possible:
 
 * [NumPy](https://numpy.org/)
 * [Pandas](https://pandas.pydata.org/)
 * [Matplotlib](https://matplotlib.org/)
 * [Seaborn](https://seaborn.pydata.org/)
-* [Scikit-learn](https://scikit-learn.org/)
+* [Plotly](https://plotly.com/python/)
+* [Yfinance](https://pypi.org/project/yfinance/)
 * [Streamlit](https://streamlit.io/)
 * [Facebook Prophet](https://facebook.github.io/prophet/)
-
 ---
