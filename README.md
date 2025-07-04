@@ -47,9 +47,9 @@ Get started in minutes by following these steps:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Samarth-Kumar-Samal/Covid-19-Prediction-Streamlit.git
+git clone https://github.com/Samarth-Kumar-Samal-Sam/Covid-19-Prediction.git
 
-cd Covid-19-Prediction-Streamlit
+cd Covid-19-Prediction
 ```
 
 ### 2. Create & Activate Virtual Environment
