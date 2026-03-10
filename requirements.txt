@@ -1,3 +1,5 @@
+streamlit==1.19.0
+altair==4.2.2
 numpy
 pandas
 matplotlib
@@ -5,5 +7,3 @@ seaborn
 plotly
 nbformat
 prophet
-streamlit
-altair
