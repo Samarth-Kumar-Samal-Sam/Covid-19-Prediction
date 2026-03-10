@@ -364,12 +364,6 @@ st.markdown("""
         Explore global COVID-19 progression with an interface designed like a modern analytics platform.
         Analyze country-level trends, compare outbreak patterns, and generate forecast scenarios using Prophet.
     </div>
-    <div style="margin-top:0.8rem;">
-        <span class="pill">Interactive Visuals</span>
-        <span class="pill">Country Insights</span>
-        <span class="pill">Forecast Modeling</span>
-        <span class="pill">Portfolio Ready UI</span>
-    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -745,3 +739,4 @@ with tab4:
         .sort_values("Confirmed", ascending=False)
     )
     st.dataframe(summary_table, use_container_width=True, height=420)
+
