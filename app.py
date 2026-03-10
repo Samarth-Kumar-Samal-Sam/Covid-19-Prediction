@@ -7,93 +7,206 @@ import plotly.graph_objects as go
 import streamlit as st
 from prophet import Prophet
 
-# =========================
+# =========================================================
 # PAGE CONFIG
-# =========================
+# =========================================================
 st.set_page_config(
-    page_title="COVID-19 Prediction Dashboard",
+    page_title="COVID-19 Analytics & Forecasting",
     page_icon="🦠",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# =========================
+# =========================================================
 # CUSTOM CSS
-# =========================
+# =========================================================
 st.markdown("""
 <style>
-    .main {
-        padding-top: 1rem;
+    :root {
+        --bg: #07111f;
+        --card: rgba(20, 35, 58, 0.72);
+        --card-2: rgba(16, 28, 46, 0.85);
+        --border: rgba(255,255,255,0.08);
+        --text: #f8fbff;
+        --muted: #a8b7cc;
+        --accent: #4da3ff;
+        --accent2: #7b61ff;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+    }
+
+    .stApp {
+        background:
+            radial-gradient(circle at top left, rgba(77,163,255,0.18), transparent 30%),
+            radial-gradient(circle at top right, rgba(123,97,255,0.14), transparent 25%),
+            linear-gradient(180deg, #040b16 0%, #081322 45%, #091827 100%);
+        color: var(--text);
     }
 
     .block-container {
-        padding-top: 1.5rem;
+        padding-top: 1.2rem;
         padding-bottom: 2rem;
+        max-width: 1400px;
     }
 
-    .hero-card {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #0ea5e9 100%);
-        padding: 1.8rem 1.6rem;
-        border-radius: 20px;
-        color: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.18);
-        margin-bottom: 1.2rem;
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0b1627 0%, #0f1d33 100%);
+        border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .hero {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(10,25,47,0.95), rgba(42,111,191,0.82));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 26px;
+        padding: 2rem 2rem 1.6rem 2rem;
+        margin-bottom: 1.4rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+    }
+
+    .hero:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 85% 20%, rgba(255,255,255,0.12), transparent 20%);
+        pointer-events: none;
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 2.35rem;
         font-weight: 800;
-        margin-bottom: 0.35rem;
+        line-height: 1.15;
+        color: white;
+        margin-bottom: 0.4rem;
+        letter-spacing: -0.02em;
     }
 
-    .hero-subtitle {
-        font-size: 1rem;
-        opacity: 0.92;
+    .hero-sub {
+        color: rgba(255,255,255,0.9);
+        font-size: 1.03rem;
+        max-width: 900px;
+        line-height: 1.6;
     }
 
-    .metric-card {
-        background: #ffffff;
+    .glass-card {
+        background: var(--card);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid var(--border);
+        border-radius: 22px;
         padding: 1rem 1.1rem;
-        border-radius: 16px;
-        border: 1px solid rgba(0,0,0,0.08);
-        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.18);
     }
 
-    .metric-title {
-        font-size: 0.95rem;
-        color: #475569;
-        margin-bottom: 0.35rem;
+    .metric-wrap {
+        background: linear-gradient(180deg, rgba(16,29,48,0.92), rgba(12,22,37,0.92));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 22px;
+        padding: 1.05rem 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.20);
+    }
+
+    .metric-label {
+        color: #a9b9cf;
+        font-size: 0.92rem;
         font-weight: 600;
+        margin-bottom: 0.45rem;
     }
 
     .metric-value {
-        font-size: 1.7rem;
+        color: white;
+        font-size: 2rem;
         font-weight: 800;
-        color: #0f172a;
+        line-height: 1.1;
     }
 
-    .section-header {
-        font-size: 1.35rem;
-        font-weight: 750;
-        margin-top: 0.4rem;
-        margin-bottom: 0.8rem;
-        color: #0f172a;
+    .metric-foot {
+        margin-top: 0.45rem;
+        color: #7fc4ff;
+        font-size: 0.82rem;
     }
 
-    .small-note {
-        color: #64748b;
-        font-size: 0.93rem;
+    .section-title {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 760;
+        margin: 0.2rem 0 0.9rem 0;
     }
 
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%);
+    .subtle {
+        color: var(--muted);
+        font-size: 0.94rem;
+    }
+
+    div[data-testid="stTabs"] button {
+        color: #cdd8e8;
+        font-weight: 650;
+    }
+
+    div[data-testid="stTabs"] button[aria-selected="true"] {
+        color: white !important;
+    }
+
+    .pill {
+        display: inline-block;
+        padding: 0.28rem 0.7rem;
+        border-radius: 999px;
+        background: rgba(77,163,255,0.12);
+        border: 1px solid rgba(77,163,255,0.25);
+        color: #bfe0ff;
+        font-size: 0.82rem;
+        margin-right: 0.45rem;
+        margin-top: 0.35rem;
+    }
+
+    .insight-box {
+        background: linear-gradient(180deg, rgba(13, 25, 42, 0.95), rgba(10, 19, 32, 0.95));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-left: 4px solid #4da3ff;
+        border-radius: 18px;
+        padding: 1rem 1rem;
+        color: #dce8f7;
+    }
+
+    .footer-note {
+        color: #93a6be;
+        font-size: 0.9rem;
+        text-align: center;
+        padding-top: 0.5rem;
+    }
+
+    div[data-baseweb="select"] > div,
+    div[data-baseweb="input"] > div,
+    .stDateInput > div > div,
+    .stMultiSelect > div > div {
+        background: rgba(15, 25, 40, 0.88) !important;
+        border-radius: 14px !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+    }
+
+    .stButton > button {
+        border-radius: 14px;
+        font-weight: 700;
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 0.65rem 1rem;
+    }
+
+    .stDownloadButton > button {
+        border-radius: 14px;
+        font-weight: 700;
+    }
+
+    div[data-testid="stMetric"] {
+        background: transparent !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
+# =========================================================
 # HELPERS
-# =========================
+# =========================================================
 @st.cache_data
 def load_data():
     df = pd.read_csv("./Dataset/covid-19.csv")
@@ -104,8 +217,8 @@ def load_data():
     df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
     df = df.dropna(subset=["Date"])
 
-    required_cols = ["Country", "Date", "Confirmed", "Recovered", "Deaths"]
-    missing = [c for c in required_cols if c not in df.columns]
+    required = ["Country", "Date", "Confirmed", "Recovered", "Deaths"]
+    missing = [c for c in required if c not in df.columns]
     if missing:
         raise ValueError(f"Missing required columns: {missing}")
 
@@ -127,12 +240,13 @@ def format_number(x):
     return f"{x:,.0f}"
 
 
-def metric_card(title, value):
+def metric_card(title, value, foot=""):
     st.markdown(
         f"""
-        <div class="metric-card">
-            <div class="metric-title">{title}</div>
+        <div class="metric-wrap">
+            <div class="metric-label">{title}</div>
             <div class="metric-value">{value}</div>
+            <div class="metric-foot">{foot}</div>
         </div>
         """,
         unsafe_allow_html=True
@@ -140,44 +254,57 @@ def metric_card(title, value):
 
 
 @st.cache_data
-def get_filtered_data(df, start_date, end_date, selected_countries):
+def get_filtered_data(df, start_date, end_date, countries):
     dff = df[(df["Date"] >= start_date) & (df["Date"] <= end_date)].copy()
-    if selected_countries:
-        dff = dff[dff["Country"].isin(selected_countries)].copy()
+    if countries:
+        dff = dff[dff["Country"].isin(countries)].copy()
     return dff
 
 
 @st.cache_data
-def aggregate_latest_snapshot(dff):
+def latest_snapshot(dff):
     if dff.empty:
-        return pd.DataFrame()
-
+        return pd.DataFrame(), None
     latest_date = dff["Date"].max()
-    latest_snapshot = dff[dff["Date"] == latest_date].copy()
-
-    summary = latest_snapshot.groupby("Country", as_index=False)[["Confirmed", "Recovered", "Deaths"]].sum()
-    return summary, latest_date
-
-
-@st.cache_data
-def top_countries(dff, metric, n=10):
-    grouped = dff.groupby("Country", as_index=False)[metric].sum()
-    grouped = grouped.sort_values(metric, ascending=False).head(n)
-    return grouped
+    snap = dff[dff["Date"] == latest_date].copy()
+    snap = snap.groupby("Country", as_index=False)[["Confirmed", "Recovered", "Deaths"]].sum()
+    return snap, latest_date
 
 
 @st.cache_data
-def prepare_country_metric_series(dff, country, metric):
-    series = (
+def prepare_country_series(dff, country, metric):
+    s = (
         dff[dff["Country"] == country][["Date", metric]]
         .rename(columns={"Date": "ds", metric: "y"})
         .groupby("ds", as_index=False)["y"].sum()
         .sort_values("ds")
     )
-    return series
+    return s
 
 
-def build_forecast_plot(history, forecast, metric, country, years):
+@st.cache_data
+def top_country_table(dff, metric, n):
+    return (
+        dff.groupby("Country", as_index=False)[metric]
+        .sum()
+        .sort_values(metric, ascending=False)
+        .head(n)
+    )
+
+
+def build_forecast(history, periods):
+    model = Prophet(
+        daily_seasonality=False,
+        weekly_seasonality=True,
+        yearly_seasonality=True
+    )
+    model.fit(history)
+    future = model.make_future_dataframe(periods=periods)
+    forecast = model.predict(future)
+    return model, forecast
+
+
+def forecast_plot(history, forecast, metric, country, years):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(
@@ -200,7 +327,7 @@ def build_forecast_plot(history, forecast, metric, country, years):
         x=pd.concat([forecast["ds"], forecast["ds"][::-1]]),
         y=pd.concat([forecast["yhat_upper"], forecast["yhat_lower"][::-1]]),
         fill="toself",
-        fillcolor="rgba(14,165,233,0.18)",
+        fillcolor="rgba(77,163,255,0.18)",
         line=dict(color="rgba(255,255,255,0)"),
         hoverinfo="skip",
         showlegend=True,
@@ -209,406 +336,412 @@ def build_forecast_plot(history, forecast, metric, country, years):
 
     fig.update_layout(
         title=f"{metric} Forecast for {country} ({years} year(s))",
-        xaxis_title="Date",
-        yaxis_title=metric,
-        hovermode="x unified",
-        template="plotly_white",
+        template="plotly_dark",
         height=520,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        hovermode="x unified",
+        margin=dict(l=20, r=20, t=60, b=20),
+        legend=dict(orientation="h", y=1.04, x=1, xanchor="right")
     )
     return fig
 
 
-# =========================
-# LOAD DATA
-# =========================
+# =========================================================
+# LOAD
+# =========================================================
 try:
     df = load_data()
 except Exception as e:
-    st.error(f"Failed to load dataset: {e}")
+    st.error(f"Dataset loading failed: {e}")
     st.stop()
 
-# =========================
-# HERO SECTION
-# =========================
+# =========================================================
+# HERO
+# =========================================================
 st.markdown("""
-<div class="hero-card">
-    <div class="hero-title">🦠 COVID-19 Prediction Dashboard</div>
-    <div class="hero-subtitle">
-        Explore global COVID-19 trends, compare countries, visualize case progression,
-        and generate interactive forecasts with Prophet.
+<div class="hero">
+    <div class="hero-title">🦠 COVID-19 Analytics & Forecasting Studio</div>
+    <div class="hero-sub">
+        Explore global COVID-19 progression with an interface designed like a modern analytics platform.
+        Analyze country-level trends, compare outbreak patterns, and generate forecast scenarios using Prophet.
+    </div>
+    <div style="margin-top:0.8rem;">
+        <span class="pill">Interactive Visuals</span>
+        <span class="pill">Country Insights</span>
+        <span class="pill">Forecast Modeling</span>
+        <span class="pill">Portfolio Ready UI</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# =========================
-# SIDEBAR
-# =========================
-st.sidebar.title("⚙️ Dashboard Controls")
-st.sidebar.markdown("Adjust filters and forecasting settings.")
-
+# =========================================================
+# TOP FILTER BAR
+# =========================================================
 min_date = df["Date"].min().date()
 max_date = df["Date"].max().date()
-all_countries = sorted(df["Country"].dropna().unique().tolist())
+countries = sorted(df["Country"].dropna().unique().tolist())
 
-date_range = st.sidebar.date_input(
-    "Select Date Range",
-    value=(min_date, max_date),
-    min_value=min_date,
-    max_value=max_date
-)
+with st.container():
+    c1, c2, c3, c4 = st.columns([1.3, 1.5, 1.1, 1.1])
+
+    with c1:
+        date_range = st.date_input(
+            "Date Range",
+            value=(min_date, max_date),
+            min_value=min_date,
+            max_value=max_date
+        )
+
+    with c2:
+        selected_countries = st.multiselect(
+            "Countries",
+            options=countries,
+            default=[]
+        )
+
+    with c3:
+        metric_focus = st.selectbox(
+            "Primary Metric",
+            ["Confirmed", "Recovered", "Deaths"],
+            index=0
+        )
+
+    with c4:
+        top_n = st.slider(
+            "Top Countries",
+            min_value=5,
+            max_value=20,
+            value=10
+        )
 
 if isinstance(date_range, tuple) and len(date_range) == 2:
-    start_date, end_date = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
+    start_date = pd.to_datetime(date_range[0])
+    end_date = pd.to_datetime(date_range[1])
 else:
-    start_date, end_date = pd.to_datetime(min_date), pd.to_datetime(max_date)
+    start_date = pd.to_datetime(min_date)
+    end_date = pd.to_datetime(max_date)
 
-selected_countries = st.sidebar.multiselect(
-    "Select Countries",
-    options=all_countries,
-    default=[]
-)
-
-top_n = st.sidebar.slider(
-    "Top Countries to Show",
-    min_value=5,
-    max_value=20,
-    value=10
-)
-
-st.sidebar.markdown("---")
-st.sidebar.subheader("🔮 Forecast Settings")
-
-forecast_country_default = "India" if "India" in all_countries else all_countries[0]
-forecast_country = st.sidebar.selectbox(
-    "Country for Forecast",
-    options=all_countries,
-    index=all_countries.index(forecast_country_default)
-)
-
-forecast_years = st.sidebar.slider(
-    "Years to Forecast",
-    min_value=1,
-    max_value=5,
-    value=2
-)
-
-run_forecast = st.sidebar.button("Run Forecast", use_container_width=True)
-
-# =========================
-# FILTER DATA
-# =========================
 dff = get_filtered_data(df, start_date, end_date, selected_countries)
 
 if dff.empty:
-    st.warning("No data available for the selected filters.")
+    st.warning("No data is available for the selected filters.")
     st.stop()
 
-summary_df, latest_date = aggregate_latest_snapshot(dff)
+snap, latest_date = latest_snapshot(dff)
 
-# =========================
-# KPI ROW
-# =========================
-total_confirmed = summary_df["Confirmed"].sum() if not summary_df.empty else 0
-total_recovered = summary_df["Recovered"].sum() if not summary_df.empty else 0
-total_deaths = summary_df["Deaths"].sum() if not summary_df.empty else 0
-countries_count = summary_df["Country"].nunique() if not summary_df.empty else 0
+# =========================================================
+# KPI CARDS
+# =========================================================
+total_confirmed = snap["Confirmed"].sum()
+total_recovered = snap["Recovered"].sum()
+total_deaths = snap["Deaths"].sum()
+country_count = snap["Country"].nunique()
 
-c1, c2, c3, c4 = st.columns(4)
-with c1:
-    metric_card("Latest Confirmed Cases", format_number(total_confirmed))
-with c2:
-    metric_card("Latest Recovered Cases", format_number(total_recovered))
-with c3:
-    metric_card("Latest Deaths", format_number(total_deaths))
-with c4:
-    metric_card("Countries in View", format_number(countries_count))
+k1, k2, k3, k4 = st.columns(4)
+with k1:
+    metric_card("Latest Confirmed", format_number(total_confirmed), f"Snapshot: {latest_date.date()}")
+with k2:
+    metric_card("Latest Recovered", format_number(total_recovered), f"Filtered range")
+with k3:
+    metric_card("Latest Deaths", format_number(total_deaths), f"Across selected view")
+with k4:
+    metric_card("Countries in Scope", format_number(country_count), "Active selection")
 
 st.markdown(
-    f"<div class='small-note'>Showing filtered data from <b>{start_date.date()}</b> to <b>{end_date.date()}</b>. "
-    f"Latest snapshot used for KPI cards: <b>{latest_date.date()}</b>.</div>",
+    f"<div class='subtle' style='margin-top:0.5rem;'>Showing data from <b>{start_date.date()}</b> to <b>{end_date.date()}</b>.</div>",
     unsafe_allow_html=True
 )
 
-st.markdown("---")
+st.markdown("<div style='height:14px;'></div>", unsafe_allow_html=True)
 
-# =========================
+# =========================================================
 # TABS
-# =========================
+# =========================================================
 tab1, tab2, tab3, tab4 = st.tabs([
-    "🌍 Global Overview",
-    "📊 Country Analysis",
-    "🗂 Dataset",
-    "🔮 Forecasting"
+    "Overview",
+    "Country Deep Dive",
+    "Forecasting",
+    "Dataset"
 ])
 
-# =========================
-# TAB 1: GLOBAL OVERVIEW
-# =========================
+# =========================================================
+# TAB 1
+# =========================================================
 with tab1:
-    st.markdown("<div class='section-header'>Global Overview</div>", unsafe_allow_html=True)
+    left, right = st.columns([1.55, 1])
 
-    map_metric = st.selectbox(
-        "Select metric for choropleth map",
-        ["Confirmed", "Recovered", "Deaths"],
-        index=0,
-        key="map_metric"
-    )
+    with left:
+        st.markdown("<div class='section-title'>Global Situation Map</div>", unsafe_allow_html=True)
 
-    map_fig = px.choropleth(
-        summary_df,
-        locations="Country",
-        locationmode="country names",
-        color=map_metric,
-        hover_name="Country",
-        color_continuous_scale="Blues" if map_metric == "Confirmed" else ("Greens" if map_metric == "Recovered" else "Reds"),
-        title=f"Global {map_metric} Cases by Country",
-    )
-    map_fig.update_layout(template="plotly_white", height=560, margin=dict(l=0, r=0, t=60, b=0))
-    st.plotly_chart(map_fig, use_container_width=True)
-
-    st.markdown("#### Top Countries")
-
-    col_a, col_b = st.columns(2)
-
-    with col_a:
-        bar_metric = st.selectbox(
-            "Select metric for top countries",
-            ["Confirmed", "Recovered", "Deaths"],
-            index=0,
-            key="bar_metric"
+        map_fig = px.choropleth(
+            snap,
+            locations="Country",
+            locationmode="country names",
+            color=metric_focus,
+            hover_name="Country",
+            color_continuous_scale="Blues" if metric_focus == "Confirmed" else ("Greens" if metric_focus == "Recovered" else "Reds"),
+            template="plotly_dark"
         )
+        map_fig.update_layout(
+            height=540,
+            margin=dict(l=0, r=0, t=10, b=0),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            geo=dict(bgcolor="rgba(0,0,0,0)")
+        )
+        st.plotly_chart(map_fig, use_container_width=True)
 
-        top_df = top_countries(dff, bar_metric, top_n)
+    with right:
+        st.markdown("<div class='section-title'>Quick Insights</div>", unsafe_allow_html=True)
+
+        top_confirmed = top_country_table(dff, "Confirmed", 1)
+        top_deaths = top_country_table(dff, "Deaths", 1)
+        top_recovered = top_country_table(dff, "Recovered", 1)
+
+        top_confirmed_country = top_confirmed.iloc[0]["Country"]
+        top_deaths_country = top_deaths.iloc[0]["Country"]
+        top_recovered_country = top_recovered.iloc[0]["Country"]
+
+        st.markdown(f"""
+        <div class="insight-box">
+            <b>Top confirmed cases:</b> {top_confirmed_country}<br><br>
+            <b>Top deaths:</b> {top_deaths_country}<br><br>
+            <b>Top recoveries:</b> {top_recovered_country}<br><br>
+            <b>Current focus metric:</b> {metric_focus}
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("<div style='height:14px;'></div>", unsafe_allow_html=True)
+
+        summary_series = dff.groupby("Date", as_index=False)[metric_focus].sum()
+        spark = px.area(
+            summary_series,
+            x="Date",
+            y=metric_focus,
+            template="plotly_dark",
+            title=f"Global {metric_focus} Trend"
+        )
+        spark.update_layout(
+            height=250,
+            margin=dict(l=10, r=10, t=45, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
+        st.plotly_chart(spark, use_container_width=True)
+
+    b1, b2 = st.columns([1, 1])
+
+    with b1:
+        st.markdown("<div class='section-title'>Top Countries Ranking</div>", unsafe_allow_html=True)
+        top_table = top_country_table(dff, metric_focus, top_n)
+
         bar_fig = px.bar(
-            top_df.sort_values(by=bar_metric),
-            x=bar_metric,
+            top_table.sort_values(metric_focus),
+            x=metric_focus,
             y="Country",
             orientation="h",
-            color=bar_metric,
+            color=metric_focus,
             color_continuous_scale="Viridis",
-            title=f"Top {top_n} Countries by {bar_metric}"
+            template="plotly_dark"
         )
         bar_fig.update_layout(
-            template="plotly_white",
-            height=520,
-            yaxis=dict(autorange="reversed")
+            height=500,
+            margin=dict(l=10, r=10, t=10, b=10),
+            yaxis=dict(autorange="reversed"),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
         )
         st.plotly_chart(bar_fig, use_container_width=True)
 
-    with col_b:
-        timeline_metric = st.selectbox(
-            "Select metric for time trend",
-            ["Confirmed", "Recovered", "Deaths"],
-            index=0,
-            key="timeline_metric"
-        )
+    with b2:
+        st.markdown("<div class='section-title'>Metric Comparison</div>", unsafe_allow_html=True)
 
-        trend_df = dff.groupby("Date", as_index=False)[timeline_metric].sum()
-        line_fig = px.line(
-            trend_df,
-            x="Date",
-            y=timeline_metric,
-            title=f"Global {timeline_metric} Trend Over Time",
-            markers=True
+        latest_compare = snap.sort_values(metric_focus, ascending=False).head(top_n)
+        comp_fig = go.Figure()
+        for metric in ["Confirmed", "Recovered", "Deaths"]:
+            comp_fig.add_trace(go.Bar(
+                x=latest_compare["Country"],
+                y=latest_compare[metric],
+                name=metric
+            ))
+        comp_fig.update_layout(
+            barmode="group",
+            template="plotly_dark",
+            height=500,
+            margin=dict(l=10, r=10, t=10, b=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
         )
-        line_fig.update_layout(template="plotly_white", height=520)
-        st.plotly_chart(line_fig, use_container_width=True)
+        st.plotly_chart(comp_fig, use_container_width=True)
 
-# =========================
-# TAB 2: COUNTRY ANALYSIS
-# =========================
+# =========================================================
+# TAB 2
+# =========================================================
 with tab2:
-    st.markdown("<div class='section-header'>Country Analysis</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-title'>Country-Level Exploration</div>", unsafe_allow_html=True)
 
-    available_countries = sorted(dff["Country"].unique().tolist())
-    analysis_country_default = forecast_country if forecast_country in available_countries else available_countries[0]
+    available = sorted(dff["Country"].unique().tolist())
+    default_country = "India" if "India" in available else available[0]
 
-    analysis_country = st.selectbox(
-        "Select a country to analyze",
-        options=available_countries,
-        index=available_countries.index(analysis_country_default)
+    csel1, csel2 = st.columns([1, 1])
+    with csel1:
+        country_a = st.selectbox("Primary Country", available, index=available.index(default_country))
+    with csel2:
+        country_b = st.selectbox("Compare With", available, index=0)
+
+    df_a = dff[dff["Country"] == country_a].sort_values("Date")
+    df_b = dff[dff["Country"] == country_b].sort_values("Date")
+
+    metric_view = st.radio(
+        "Choose metric",
+        ["Confirmed", "Recovered", "Deaths"],
+        horizontal=True
     )
 
-    country_df = dff[dff["Country"] == analysis_country].copy()
-    country_df = country_df.sort_values("Date")
+    p1, p2, p3 = st.columns(3)
+    latest_a = df_a.iloc[-1]
+    with p1:
+        metric_card(f"{country_a} {metric_view}", format_number(latest_a[metric_view]), "Latest value")
+    with p2:
+        growth = df_a[metric_view].diff().fillna(0).tail(7).mean()
+        metric_card("Avg Daily Change (7d)", format_number(max(growth, 0)), "Recent momentum")
+    with p3:
+        peak = df_a[metric_view].max()
+        metric_card("Peak Observed", format_number(peak), "Within selected window")
 
-    if country_df.empty:
-        st.warning("No data available for this country.")
-    else:
-        latest_country = country_df.iloc[-1]
+    trend_fig = go.Figure()
+    trend_fig.add_trace(go.Scatter(
+        x=df_a["Date"], y=df_a[metric_view], mode="lines", name=country_a, line=dict(width=3)
+    ))
+    trend_fig.add_trace(go.Scatter(
+        x=df_b["Date"], y=df_b[metric_view], mode="lines", name=country_b, line=dict(width=3, dash="dot")
+    ))
+    trend_fig.update_layout(
+        title=f"{metric_view}: {country_a} vs {country_b}",
+        template="plotly_dark",
+        height=520,
+        hovermode="x unified",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)"
+    )
+    st.plotly_chart(trend_fig, use_container_width=True)
 
-        k1, k2, k3 = st.columns(3)
-        with k1:
-            metric_card(f"{analysis_country} Confirmed", format_number(latest_country["Confirmed"]))
-        with k2:
-            metric_card(f"{analysis_country} Recovered", format_number(latest_country["Recovered"]))
-        with k3:
-            metric_card(f"{analysis_country} Deaths", format_number(latest_country["Deaths"]))
+    lower1, lower2 = st.columns([1.1, 0.9])
 
-        metric_option = st.radio(
-            "Select metric view",
-            ["Confirmed", "Recovered", "Deaths", "All"],
-            horizontal=True
-        )
-
-        if metric_option == "All":
-            multi_fig = go.Figure()
-            for col in ["Confirmed", "Recovered", "Deaths"]:
-                multi_fig.add_trace(go.Scatter(
-                    x=country_df["Date"],
-                    y=country_df[col],
-                    mode="lines",
-                    name=col
-                ))
-            multi_fig.update_layout(
-                title=f"{analysis_country}: COVID-19 Trend Comparison",
-                xaxis_title="Date",
-                yaxis_title="Cases",
-                hovermode="x unified",
-                template="plotly_white",
-                height=550
-            )
-            st.plotly_chart(multi_fig, use_container_width=True)
-        else:
-            single_fig = px.area(
-                country_df,
-                x="Date",
-                y=metric_option,
-                title=f"{analysis_country}: {metric_option} Trend"
-            )
-            single_fig.update_layout(template="plotly_white", height=550)
-            st.plotly_chart(single_fig, use_container_width=True)
-
-        st.markdown("#### Daily Change Analysis")
-        daily_metric = st.selectbox(
-            "Select metric for daily change",
-            ["Confirmed", "Recovered", "Deaths"],
-            key="daily_metric"
-        )
-
-        daily_df = country_df[["Date", daily_metric]].copy()
-        daily_df["Daily Change"] = daily_df[daily_metric].diff().fillna(0)
+    with lower1:
+        daily_df = df_a[["Date", metric_view]].copy()
+        daily_df["Daily Change"] = daily_df[metric_view].diff().fillna(0)
 
         daily_fig = px.bar(
             daily_df,
             x="Date",
             y="Daily Change",
-            title=f"{analysis_country}: Daily Change in {daily_metric}"
+            title=f"{country_a}: Daily Change in {metric_view}",
+            template="plotly_dark"
         )
-        daily_fig.update_layout(template="plotly_white", height=420)
+        daily_fig.update_layout(
+            height=420,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
+        )
         st.plotly_chart(daily_fig, use_container_width=True)
 
-# =========================
-# TAB 3: DATASET
-# =========================
-with tab3:
-    st.markdown("<div class='section-header'>Filtered Dataset</div>", unsafe_allow_html=True)
+    with lower2:
+        st.markdown("<div class='section-title'>Country Insight Panel</div>", unsafe_allow_html=True)
+        ratio = (latest_a["Deaths"] / latest_a["Confirmed"] * 100) if latest_a["Confirmed"] > 0 else 0
+        rec_ratio = (latest_a["Recovered"] / latest_a["Confirmed"] * 100) if latest_a["Confirmed"] > 0 else 0
 
+        st.markdown(f"""
+        <div class="insight-box">
+            <b>Country:</b> {country_a}<br><br>
+            <b>Death-to-confirmed ratio:</b> {ratio:.2f}%<br><br>
+            <b>Recovery-to-confirmed ratio:</b> {rec_ratio:.2f}%<br><br>
+            <b>Comparison country:</b> {country_b}<br><br>
+            <b>Analysis metric:</b> {metric_view}
+        </div>
+        """, unsafe_allow_html=True)
+
+# =========================================================
+# TAB 3
+# =========================================================
+with tab3:
+    st.markdown("<div class='section-title'>Forecasting Studio</div>", unsafe_allow_html=True)
+
+    f1, f2, f3 = st.columns([1, 1, 1])
+    with f1:
+        forecast_country = st.selectbox("Forecast Country", sorted(dff["Country"].unique()))
+    with f2:
+        forecast_metric = st.selectbox("Forecast Metric", ["Confirmed", "Recovered", "Deaths"])
+    with f3:
+        forecast_years = st.slider("Forecast Horizon (Years)", 1, 5, 2)
+
+    run = st.button("Generate Forecast")
+
+    if run:
+        history = prepare_country_series(dff, forecast_country, forecast_metric)
+
+        if len(history) < 10:
+            st.warning("Not enough observations to build a reliable forecast.")
+        else:
+            with st.spinner("Training forecasting model..."):
+                periods = forecast_years * 365
+                model, forecast = build_forecast(history, periods)
+
+            card1, card2, card3 = st.columns(3)
+            final_row = forecast.iloc[-1]
+            with card1:
+                metric_card("Forecast Value", format_number(max(final_row["yhat"], 0)), "Projected endpoint")
+            with card2:
+                metric_card("Upper Bound", format_number(max(final_row["yhat_upper"], 0)), "Optimistic range")
+            with card3:
+                metric_card("Lower Bound", format_number(max(final_row["yhat_lower"], 0)), "Conservative range")
+
+            st.plotly_chart(
+                forecast_plot(history, forecast, forecast_metric, forecast_country, forecast_years),
+                use_container_width=True
+            )
+
+            cplot1, cplot2 = st.columns([1.1, 0.9])
+
+            with cplot1:
+                components_fig = model.plot_components(forecast)
+                st.pyplot(components_fig)
+
+            with cplot2:
+                st.markdown("<div class='section-title'>Forecast Summary</div>", unsafe_allow_html=True)
+                st.markdown(f"""
+                <div class="insight-box">
+                    <b>Country:</b> {forecast_country}<br><br>
+                    <b>Metric:</b> {forecast_metric}<br><br>
+                    <b>Forecast horizon:</b> {forecast_years} year(s)<br><br>
+                    <b>Historical observations:</b> {len(history)}<br><br>
+                    <b>Latest projected value:</b> {format_number(max(final_row["yhat"], 0))}
+                </div>
+                """, unsafe_allow_html=True)
+
+            st.markdown("<div class='section-title'>Forecast Table</div>", unsafe_allow_html=True)
+            forecast_table = forecast[["ds", "yhat", "yhat_lower", "yhat_upper"]].tail(20).copy()
+            forecast_table.columns = ["Date", "Forecast", "Lower Bound", "Upper Bound"]
+            st.dataframe(forecast_table, use_container_width=True, height=380)
+
+# =========================================================
+# TAB 4
+# =========================================================
+with tab4:
+    st.markdown("<div class='section-title'>Filtered Dataset</div>", unsafe_allow_html=True)
     st.dataframe(dff, use_container_width=True, height=500)
 
     csv = dff.to_csv(index=False).encode("utf-8")
     st.download_button(
-        label="📥 Download Filtered Data as CSV",
+        "Download Filtered CSV",
         data=csv,
         file_name="filtered_covid_data.csv",
         mime="text/csv"
     )
 
-    st.markdown("#### Summary Table")
+    st.markdown("<div class='section-title'>Country Summary Table</div>", unsafe_allow_html=True)
     summary_table = (
         dff.groupby("Country", as_index=False)[["Confirmed", "Recovered", "Deaths"]]
         .sum()
         .sort_values("Confirmed", ascending=False)
     )
     st.dataframe(summary_table, use_container_width=True, height=420)
-
-# =========================
-# TAB 4: FORECASTING
-# =========================
-with tab4:
-    st.markdown("<div class='section-header'>Forecasting with Prophet</div>", unsafe_allow_html=True)
-    st.caption("Forecasts are generated using historical country-level time series within the selected date range.")
-
-    forecast_metrics = st.multiselect(
-        "Select metrics to forecast",
-        ["Confirmed", "Recovered", "Deaths"],
-        default=["Confirmed", "Deaths", "Recovered"]
-    )
-
-    if not run_forecast:
-        st.info("Choose forecasting settings from the sidebar and click 'Run Forecast'.")
-    else:
-        if forecast_country not in dff["Country"].unique():
-            st.warning("The selected forecast country is not present in the filtered dataset. Adjust filters and try again.")
-        else:
-            period = forecast_years * 365
-
-            for metric in forecast_metrics:
-                with st.expander(f"Forecast: {metric} for {forecast_country}", expanded=(metric == forecast_metrics[0])):
-                    history = prepare_country_metric_series(dff, forecast_country, metric)
-
-                    if len(history) < 10:
-                        st.warning(f"Not enough data to forecast {metric} for {forecast_country}.")
-                        continue
-
-                    hist_fig = px.line(
-                        history,
-                        x="ds",
-                        y="y",
-                        title=f"Historical {metric} Cases for {forecast_country}",
-                        markers=True
-                    )
-                    hist_fig.update_layout(template="plotly_white", height=420)
-                    st.plotly_chart(hist_fig, use_container_width=True)
-
-                    with st.spinner(f"Training Prophet model for {metric}..."):
-                        model = Prophet(
-                            daily_seasonality=False,
-                            weekly_seasonality=True,
-                            yearly_seasonality=True
-                        )
-                        model.fit(history)
-
-                        future = model.make_future_dataframe(periods=period)
-                        forecast = model.predict(future)
-
-                    forecast_fig = build_forecast_plot(
-                        history=history,
-                        forecast=forecast,
-                        metric=metric,
-                        country=forecast_country,
-                        years=forecast_years
-                    )
-                    st.plotly_chart(forecast_fig, use_container_width=True)
-
-                    latest_forecast = forecast.iloc[-1]
-                    f1, f2, f3 = st.columns(3)
-                    with f1:
-                        metric_card("Predicted Value", format_number(max(latest_forecast["yhat"], 0)))
-                    with f2:
-                        metric_card("Upper Bound", format_number(max(latest_forecast["yhat_upper"], 0)))
-                    with f3:
-                        metric_card("Lower Bound", format_number(max(latest_forecast["yhat_lower"], 0)))
-
-                    st.markdown("#### Forecast Components")
-                    components_fig = model.plot_components(forecast)
-                    st.pyplot(components_fig)
-
-                    forecast_table = forecast[["ds", "yhat", "yhat_lower", "yhat_upper"]].tail(20).copy()
-                    forecast_table.columns = ["Date", "Forecast", "Lower Bound", "Upper Bound"]
-                    st.dataframe(forecast_table, use_container_width=True)
-
-# =========================
-# FOOTER
-# =========================
-st.markdown("---")
-st.markdown(
-    """
-    <div class="small-note">
-        Built with Streamlit, Plotly, Pandas, and Prophet.<br>
-        This dashboard is designed for interactive exploration and forecasting of country-level COVID-19 trends.
-    </div>
-    """,
-    unsafe_allow_html=True
-)
