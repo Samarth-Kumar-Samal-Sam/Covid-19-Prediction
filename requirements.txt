@@ -6,3 +6,4 @@ plotly
 nbformat
 prophet
 streamlit
+altair
