@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+import matplotlib.pyplot as plt
 from prophet import Prophet
 
 # =========================================================
@@ -149,18 +150,6 @@ st.markdown("""
         color: white !important;
     }
 
-    .pill {
-        display: inline-block;
-        padding: 0.28rem 0.7rem;
-        border-radius: 999px;
-        background: rgba(77,163,255,0.12);
-        border: 1px solid rgba(77,163,255,0.25);
-        color: #bfe0ff;
-        font-size: 0.82rem;
-        margin-right: 0.45rem;
-        margin-top: 0.35rem;
-    }
-
     .insight-box {
         background: linear-gradient(180deg, rgba(13, 25, 42, 0.95), rgba(10, 19, 32, 0.95));
         border: 1px solid rgba(255,255,255,0.08);
@@ -168,13 +157,6 @@ st.markdown("""
         border-radius: 18px;
         padding: 1rem 1rem;
         color: #dce8f7;
-    }
-
-    .footer-note {
-        color: #93a6be;
-        font-size: 0.9rem;
-        text-align: center;
-        padding-top: 0.5rem;
     }
 
     div[data-baseweb="select"] > div,
@@ -186,16 +168,12 @@ st.markdown("""
         border: 1px solid rgba(255,255,255,0.08) !important;
     }
 
-    .stButton > button {
+    .stButton > button,
+    .stDownloadButton > button {
         border-radius: 14px;
         font-weight: 700;
         border: 1px solid rgba(255,255,255,0.08);
         padding: 0.65rem 1rem;
-    }
-
-    .stDownloadButton > button {
-        border-radius: 14px;
-        font-weight: 700;
     }
 
     div[data-testid="stMetric"] {
@@ -279,6 +257,8 @@ def prepare_country_series(dff, country, metric):
         .groupby("ds", as_index=False)["y"].sum()
         .sort_values("ds")
     )
+    s["ds"] = pd.to_datetime(s["ds"])
+    s["y"] = pd.to_numeric(s["y"], errors="coerce").fillna(0.0)
     return s
 
 
@@ -293,14 +273,24 @@ def top_country_table(dff, metric, n):
 
 
 def build_forecast(history, periods):
+    history = history.copy()
+    history["floor"] = 0
+
     model = Prophet(
+        growth="linear",
         daily_seasonality=False,
         weekly_seasonality=True,
-        yearly_seasonality=True
+        yearly_seasonality=True,
+        interval_width=0.95
     )
-    model.fit(history)
-    future = model.make_future_dataframe(periods=periods)
+
+    model.fit(history[["ds", "y"]])
+    future = model.make_future_dataframe(periods=periods, freq="D")
     forecast = model.predict(future)
+
+    for col in ["yhat", "yhat_lower", "yhat_upper"]:
+        forecast[col] = forecast[col].clip(lower=0)
+
     return model, forecast
 
 
@@ -340,7 +330,9 @@ def forecast_plot(history, forecast, metric, country, years):
         height=520,
         hovermode="x unified",
         margin=dict(l=20, r=20, t=60, b=20),
-        legend=dict(orientation="h", y=1.04, x=1, xanchor="right")
+        legend=dict(orientation="h", y=1.04, x=1, xanchor="right"),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)"
     )
     return fig
 
@@ -360,6 +352,10 @@ except Exception as e:
 st.markdown("""
 <div class="hero">
     <div class="hero-title">🦠 COVID-19 Analytics & Forecasting Studio</div>
+    <div class="hero-sub">
+        Interactive exploration of confirmed cases, recoveries, deaths, country comparisons,
+        and forward-looking forecasts using Prophet.
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -430,9 +426,9 @@ k1, k2, k3, k4 = st.columns(4)
 with k1:
     metric_card("Latest Confirmed", format_number(total_confirmed), f"Snapshot: {latest_date.date()}")
 with k2:
-    metric_card("Latest Recovered", format_number(total_recovered), f"Filtered range")
+    metric_card("Latest Recovered", format_number(total_recovered), "Filtered range")
 with k3:
-    metric_card("Latest Deaths", format_number(total_deaths), f"Across selected view")
+    metric_card("Latest Deaths", format_number(total_deaths), "Across selected view")
 with k4:
     metric_card("Countries in Scope", format_number(country_count), "Active selection")
 
@@ -693,8 +689,9 @@ with tab3:
             cplot1, cplot2 = st.columns([1.1, 0.9])
 
             with cplot1:
-                components_fig = model.plot_components(forecast)
-                st.pyplot(components_fig)
+                comp_fig = model.plot_components(forecast)
+                st.pyplot(comp_fig)
+                plt.close(comp_fig)
 
             with cplot2:
                 st.markdown("<div class='section-title'>Forecast Summary</div>", unsafe_allow_html=True)
@@ -735,5 +732,3 @@ with tab4:
         .sort_values("Confirmed", ascending=False)
     )
     st.dataframe(summary_table, use_container_width=True, height=420)
-
-
