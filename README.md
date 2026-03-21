@@ -4,7 +4,7 @@
 
 ### 🚀 **Live Demo**
 
-🔗 [Try the Application Here](https://sam-covid-19-prediction-app.streamlit.app/) — **Experience real-time COVID-19 forecasting with an intuitive UI!**
+🔗 [Try the Application Here](https://sam-covid-19-prediction.streamlit.app/) — **Experience real-time COVID-19 forecasting with an intuitive UI!**
 
 ---
 
